@@ -1,0 +1,18 @@
+name: gameagent_vlm
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - fastapi
+      - uvicorn
+      - pydantic
+      - accelerate
+      - transformers
+      - qwen-vl-utils
+      - torchvision
+      - pillow
+      - requests
+      - pyyaml

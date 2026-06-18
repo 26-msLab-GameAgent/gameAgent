@@ -1,0 +1,33 @@
+runtime:
+  mode: mock
+  tick_interval_ms: 100
+  max_episode_steps: 5
+  emergency_stop_path: ./STOP
+
+capture:
+  adapter: mock
+  resize:
+    width: 720
+    height: 1280
+
+control:
+  adapter: mock
+  allowed_actions:
+    - tap
+    - swipe
+    - long_press
+    - wait
+    - back
+    - noop
+
+model:
+  provider: mock
+
+storage:
+  run_dir: ./agent_runs
+  save_frames: true
+  save_model_raw_response: true
+
+guards:
+  clamp_coordinates: true
+  max_repeated_action_count: 8

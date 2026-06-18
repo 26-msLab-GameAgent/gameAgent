@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+.env
+
+agent_runs/
+runs/
+STOP
+*.log
+
+screen*.png
+test.png
+
+tools/platform-tools/
+tools/*.zip

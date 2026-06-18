@@ -1,0 +1,51 @@
+runtime:
+  mode: local_bluestacks_local_vlm_adbserver
+  tick_interval_ms: 0
+  settle_after_action_ms: 1200
+  max_episode_steps: 1000
+  emergency_stop_path: ./STOP
+
+capture:
+  adapter: adb_screencap
+  device_id: 127.0.0.1:5555
+  adb_path: tools/platform-tools/adb
+  adb_server_socket: tcp:127.0.0.1:15037
+  timeout_ms: 30000
+  capture_method: exec_out
+  output_format: png
+  resize:
+    width: 1920
+    height: 1080
+
+control:
+  adapter: adb_touch
+  device_id: 127.0.0.1:5555
+  adb_path: tools/platform-tools/adb
+  adb_server_socket: tcp:127.0.0.1:15037
+  timeout_ms: 30000
+  coordinate_space: device
+  min_action_interval_ms: 250
+  allowed_actions:
+    - tap
+    - swipe
+    - long_press
+    - wait
+    - back
+    - noop
+
+model:
+  provider: remote_inference
+  endpoint: http://127.0.0.1:18082/v1/decide
+  model: local_qwen_vl
+  timeout_ms: 120000
+  max_retries: 1
+
+storage:
+  run_dir: ./agent_runs
+  save_frames: true
+  save_model_raw_response: true
+
+guards:
+  clamp_coordinates: true
+  stop_on_sensitive_screen: true
+  max_repeated_action_count: 3
