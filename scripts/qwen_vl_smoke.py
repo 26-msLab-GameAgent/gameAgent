@@ -19,7 +19,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model-size", choices=sorted(QWEN_VL_MODEL_IDS), default="7B")
     parser.add_argument("--model-id", default=None)
-    parser.add_argument("--image", required=True)
+    parser.add_argument("--image", default="/data/project/sink0324/gameagent/test.png")
     parser.add_argument("--prompt", default="Describe this mobile game screen briefly.")
     parser.add_argument("--max-new-tokens", type=int, default=128)
     args = parser.parse_args()

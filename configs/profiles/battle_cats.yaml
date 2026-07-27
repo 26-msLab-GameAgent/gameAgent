@@ -1,0 +1,27 @@
+name: The Battle Cats
+objective: Clear stages by protecting our base, deploying cats with available money, and destroying the enemy base.
+priorities:
+  - Close popups and tutorials with OK, 확인, 닫기, X, or continue buttons when they block progress.
+  - If 전투개시, Start, Battle Start, or a large primary battle button is visible, tap it.
+  - If a stage/country/map node is selectable, choose the next available or highlighted stage.
+  - If a reward or clear result screen appears, claim rewards and continue.
+  - During battle, look at the money in the upper-right area and deploy cats only when affordable.
+  - Tap cat unit buttons along the bottom row to defend our base and push toward the enemy base.
+  - If money is accumulating and no unit is affordable, wait briefly.
+screen_rules:
+  - On character creation or confirmation dialogs, tap OK/confirm once, then wait for the next screen.
+  - If OK/confirm was tapped recently and the same dialog remains, wait once or look for a different close/continue target instead of repeating the same coordinate.
+  - On loading, transition, black, mostly blank, or animation-heavy screens, wait.
+  - If the same tap was just performed and the screen still looks unchanged, do not repeat it; wait or choose another progress button.
+  - Prefer Korean labels related to progress such as 전투개시, 확인, 계속, 닫기, 보상, 받기.
+avoid:
+  - Do not tap HELP unless explicitly stuck for many steps and no progress button exists.
+  - Do not open shop, gacha, payment, purchase, account, login, ads, settings, or social buttons.
+  - Do not tap small decorative icons when a primary progress button is visible.
+battle_tactics:
+  - During battle, first identify whether the screen is an active battlefield with bases and the unit bar visible.
+  - Check whether cat unit buttons on the bottom row appear affordable, highlighted, or active.
+  - Prefer cheap available cat units first to build pressure and defend.
+  - If several units are affordable, tap a cheap/frontline unit, then wait briefly for cooldown and money changes.
+  - Avoid tapping enemy base or empty battlefield unless no unit buttons are visible.
+  - Wait when all unit icons appear unaffordable or cooldowned.

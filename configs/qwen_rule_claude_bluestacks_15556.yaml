@@ -1,5 +1,5 @@
 runtime:
-  mode: local_bluestacks_local_vlm
+  mode: local_bluestacks_qwen_rule_claude
   tick_interval_ms: 0
   settle_after_action_ms: 1200
   max_episode_steps: 1000
@@ -7,8 +7,8 @@ runtime:
 
 capture:
   adapter: adb_screencap
-  device_id: 127.0.0.1:15555
-  adb_path: /data/project/gameagent_yb/0714/gameagent/tools/platform-tools/adb
+  device_id: 127.0.0.1:15556
+  adb_path: tools/platform-tools/adb
   timeout_ms: 60000
   capture_method: exec_out
   output_format: png
@@ -18,8 +18,8 @@ capture:
 
 control:
   adapter: adb_touch
-  device_id: 127.0.0.1:15555
-  adb_path: /data/project/gameagent_yb/0714/gameagent/tools/platform-tools/adb
+  device_id: 127.0.0.1:15556
+  adb_path: tools/platform-tools/adb
   timeout_ms: 60000
   coordinate_space: device
   min_action_interval_ms: 250
@@ -33,13 +33,13 @@ control:
 
 model:
   provider: remote_inference
-  endpoint: http://127.0.0.1:18081/v1/decide
-  model: qwen7b_rule_gpt_play
-  timeout_ms: 120000
-  max_retries: 1
+  endpoint: http://127.0.0.1:18082/v1/decide
+  model: qwen7b_rule_claude_play
+  timeout_ms: 900000
+  max_retries: 0
 
 storage:
-  run_dir: /data/project/gameagent_yb/0714/gameagent/agent_runs
+  run_dir: ./agent_runs
   timestamped_run_dir: false
   numbered_run_dir: true
   save_frames: true

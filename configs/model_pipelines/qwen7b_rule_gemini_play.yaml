@@ -1,0 +1,9 @@
+# OpenRouter Gemini handles perception/planning/policy.
+# Rule learning stays on the locally cached Qwen2.5-VL-7B model.
+default_model: openrouter:~google/gemini-flash-latest
+
+agents:
+  perception: openrouter:~google/gemini-flash-latest
+  rule_learner: qwen:7B
+  planner: openrouter:~google/gemini-flash-latest
+  policy: openrouter:~google/gemini-flash-latest

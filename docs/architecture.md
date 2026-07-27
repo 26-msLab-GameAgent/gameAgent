@@ -65,11 +65,17 @@ Voyager는 LLM 기반 embodied agent 구조에서 자동 curriculum, skill libra
 
 정책 판단과 조작 결정을 담당합니다.
 
-- short-horizon VLM policy
-- optional high-level planner
+- perception agent: 화면 상태와 주요 시각 정보를 읽되 rule/plan/action은 만들지 않는다.
+- rule learner agent: 관찰과 최근 history에서 게임 rule memory를 갱신하되 plan/action은 만들지 않는다.
+- planner agent: profile과 rule memory를 바탕으로 현재 목표와 전략을 정하되 좌표는 만들지 않는다.
+- policy agent: planner의 전략을 실제 touch action 하나로 변환하되 rule/plan은 갱신하지 않는다.
 - action schema validation
 - cooldown/debounce
 - safety guardrail
+
+기본 `pipeline` 모드에서는 같은 VLM을 역할별 프롬프트로 순차 호출합니다. Ablation을 위해
+`--perception-model-id`, `--rule-learner-model-id`, `--planner-model-id`,
+`--policy-model-id`로 agent별 로컬 모델 ref를 다르게 줄 수 있습니다.
 
 ### Model Client Layer
 
@@ -174,4 +180,3 @@ remote emulator/device + remote capture/control + local CLI or orchestrator
 - 같은 액션 반복은 cooldown 정책으로 제어한다.
 - emergency stop 파일 또는 CLI signal로 즉시 중단 가능하게 한다.
 - 계정/결제/개인정보 화면으로 보이는 상태에서는 기본적으로 `noop` 또는 stop을 선택할 수 있게 guard를 둔다.
-

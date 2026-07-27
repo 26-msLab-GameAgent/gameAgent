@@ -99,6 +99,8 @@ def build_logger(config: AppConfig) -> EpisodeLogger:
         run_dir=str(storage.get("run_dir", "./runs")),
         save_frames=bool(storage.get("save_frames", True)),
         save_model_raw_response=bool(storage.get("save_model_raw_response", True)),
+        timestamped_run_dir=bool(storage.get("timestamped_run_dir", True)),
+        numbered_run_dir=bool(storage.get("numbered_run_dir", False)),
     )
 
 

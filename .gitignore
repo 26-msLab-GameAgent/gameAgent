@@ -1,16 +1,29 @@
 __pycache__/
-*.pyc
+*.py[cod]
+*.egg-info/
+
 .pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
 .venv/
-.env
+venv/
 
 agent_runs/
 runs/
 STOP
 *.log
 
-screen*.png
-test.png
+# Local tooling and captured emulator images.
+tools/
+/screen*.png
+/test.png
 
-tools/platform-tools/
-tools/*.zip
+# Local agent metadata and secrets.
+.agents/
+.codex/
+.env
+.env.*
+.secrets/
+*.key

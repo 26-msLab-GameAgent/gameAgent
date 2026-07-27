@@ -43,6 +43,7 @@ class AgentRunner:
         self._install_signal_handlers()
         previous_action: Action | None = None
         print(f"[gameagent] run_dir={self.logger.path}")
+        print(f"[gameagent] rule/action trace={self.logger.rule_action_trace_path}")
         print(f"[gameagent] model={self.model.model_name}")
 
         for frame_id in range(1, self.options.max_episode_steps + 1):

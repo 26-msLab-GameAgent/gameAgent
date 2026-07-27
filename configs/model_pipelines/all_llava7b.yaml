@@ -1,0 +1,8 @@
+# All four pipeline agents use the locally installed Ollama LLaVA 7B model.
+default_model: ollama:llava:7b
+
+agents:
+  perception: ollama:llava:7b
+  rule_learner: ollama:llava:7b
+  planner: ollama:llava:7b
+  policy: ollama:llava:7b

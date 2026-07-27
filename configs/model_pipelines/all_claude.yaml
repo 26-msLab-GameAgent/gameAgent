@@ -1,0 +1,8 @@
+# All four pipeline agents use Claude through OpenRouter.
+default_model: openrouter:~anthropic/claude-sonnet-latest
+
+agents:
+  perception: openrouter:~anthropic/claude-sonnet-latest
+  rule_learner: openrouter:~anthropic/claude-sonnet-latest
+  planner: openrouter:~anthropic/claude-sonnet-latest
+  policy: openrouter:~anthropic/claude-sonnet-latest
