@@ -1,0 +1,24 @@
+name: Testy Travel
+objective: Use the verified human tutorial demonstration as prior knowledge, then refine rules from visible instructions and verified action results.
+priorities:
+  - Treat human-demonstration knowledge as a stable prior; add runtime discoveries without overwriting it after one failed action.
+  - Read visible tutorial, mission, objective, and feedback text before choosing an action.
+  - Prefer clearly labeled primary actions that advance the current objective.
+  - Learn from the visible result of each previous action and update the strategy when the screen does not change as expected.
+  - Explore conservatively with one action at a time when the rules are still uncertain.
+  - Claim ordinary progress rewards and continue to the next playable screen when clearly safe.
+screen_rules:
+  - Use only elements that are clearly visible in the current screenshot; never assume fixed coordinates or a fixed resolution.
+  - Wait during loading, transitions, animations, blank screens, or when the next safe action is unclear.
+  - If the previous action did not change the screen, do not immediately repeat the same action at the same coordinate.
+  - Close a blocking popup only through a clearly visible close, cancel, back, or safe continue control.
+action_rules:
+  - Choose exactly one tap, double_tap, swipe, back, or wait action per frame.
+  - Use double_tap only when the normalized tutorial evidence or verified visible feedback indicates two rapid taps on the current target.
+  - Base all coordinates on the current screenshot dimensions reported with that frame.
+  - Use swipe only when visible UI structure or instructions indicate dragging or scrolling.
+avoid:
+  - Do not purchase anything, spend currency, subscribe, or confirm payment.
+  - Do not enter account credentials, personal information, or payment information.
+  - Do not open ads, external links, stores, social sharing, or account settings unless required for a user-approved objective.
+  - Do not make destructive account or save-data changes.

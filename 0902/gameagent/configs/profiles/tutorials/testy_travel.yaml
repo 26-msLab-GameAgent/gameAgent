@@ -1,0 +1,34 @@
+status: ready
+generated_from:
+  video: /data/project/gameagent_yb/0902/tasty_tuto/tasty_tuto.mp4
+  actions: /data/project/gameagent_yb/0902/tasty_tuto/tasty_tuto.json
+  generator: verified_bootstrap
+
+demonstration_rules:
+  - The verified tutorial loop is item generation, merging identical items, completing customer orders, and upgrading buildings.
+  - Merge by dragging the center of one matching item onto the center of the other matching item and releasing there.
+  - A successful merge consumes both source items and leaves one higher-level item at the destination.
+  - Generator interaction produces mergeable items when the demonstrated tap pattern succeeds; use the normalized demonstration action rather than assuming a fixed tap count from the object type.
+  - Complete a customer order through the visible order submit/check control after producing the requested item.
+  - Tutorial overlays and spotlight instructions can block unrelated board input; dismiss or finish the visible tutorial instruction before treating an action as a game-rule failure.
+  - Similar-looking drink tiles can be different levels; use visible selection name/level and before/after evidence instead of appearance alone.
+  - The human tutorial successfully progressed while repeatedly generating and merging items, raising coins from 0 to 16.
+
+tutorial_sequence:
+  - Follow the initial spotlight and drag the highlighted matching pair together.
+  - Tap the highlighted generator to create the requested base items.
+  - Merge the matching generated items until the requested order item is reached.
+  - Use the visible order completion control to submit the item and collect coins.
+  - Continue the generate, merge, order, and upgrade loop after the tutorial explanation screen closes.
+
+gesture_priors:
+  - Human demonstration contains 34 drag gestures and 37 taps over about 98 seconds.
+  - Human drag duration ranged from 285ms to 1101ms, averaging about 500ms; prefer about 500-700ms for tile merging unless the current UI indicates otherwise.
+  - Human tap duration ranged from 41ms to 128ms, averaging about 92ms.
+  - The recorder stores individual clicks separately; two same-position taps within the configured rapid-tap window are normalized into one double_tap action before tutorial-rule analysis.
+  - Demonstration coordinates are reference evidence only; detect objects in the current frame and do not replay recorded absolute coordinates.
+
+demonstration_evidence_policy:
+  - Human-demonstration rules are read-only prior knowledge and must not be deleted by runtime rule learning.
+  - Current verified screen evidence may extend or qualify a demonstration rule but a stale observation, overlay-blocked input, or control failure must not contradict it.
+  - When current evidence genuinely conflicts, retain the prior and add a clearly marked hypothesis until repeated verified outcomes resolve the conflict.

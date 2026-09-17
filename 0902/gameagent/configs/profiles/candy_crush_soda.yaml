@@ -1,0 +1,59 @@
+name: Candy Crush Soda Saga
+objective: Clear the puzzle by making valid swaps that create matches of three or more same-colored candies in a row or column.
+# Keep Candy actions under the VLM planner/policy. The color-grid fallback can
+# mistake the colorful hub for a playable board and override a planned tap.
+fallback_planner: disabled
+board_grid:
+  rows: 7
+  cols: 7
+  bbox:
+    left: 805
+    top: 40
+    right: 1585
+    bottom: 825
+board_grids:
+  - rows: 7
+    cols: 7
+    bbox:
+      left: 805
+      top: 40
+      right: 1585
+      bottom: 825
+  - rows: 7
+    cols: 5
+    bbox:
+      left: 915
+      top: 150
+      right: 1475
+      bottom: 930
+priorities:
+  - Inspect the board grid and find a swap between two adjacent candies that creates at least one horizontal or vertical match of three or more.
+  - If tutorial, help, mission, or rule text appears on screen, read it and use that information to choose the next move or continue action.
+  - Prefer moves that create special candies, clear blockers, complete level objectives, or affect candies near the target area.
+  - If multiple valid swaps exist, choose the move with the largest clear, special candy creation, or objective progress.
+  - If no obvious move is visible, scan the board from lower rows upward because lower matches often create cascades.
+screen_rules:
+  - A valid move swaps exactly two adjacent candies: left/right/up/down only, never diagonal.
+  - Do not tap random UI buttons, shop, ads, boosters, settings, or purchase buttons.
+  - If a popup blocks the board, close or confirm it only if it is required to continue the level.
+  - If the board is animating, cascading, loading, or no stable candies are visible, wait.
+  - If the previous swap did not change the board, choose a different candidate move instead of repeating the same swipe.
+match_rules:
+  - A move succeeds only if, after the swipe exchange is completed, the resulting board has three or more same-colored candies consecutively in one straight horizontal row or one straight vertical column.
+  - A move is also successful when it creates horizontal and vertical matches at the same time, such as T-shapes or L-shapes.
+  - Diagonal groups do not count, separated candies do not count, and two-in-a-row does not count.
+  - Matches of 4 or 5 same-colored candies are also valid because they include at least 3 in a row and can create stronger effects.
+  - Prefer 4-candy and 5-candy matches over simple 3-candy matches when available.
+  - Fish-shaped special candies and wrapped candy/bag-shaped special candies are valuable; use or create them when they help clear the objective.
+  - A swap is useful only if the board changes after the swipe; if the next screenshot shows the same candy layout, treat the previous swipe as failed and choose a different candidate.
+  - A swap is useful only if after swapping, three or more candies of the same kind become consecutive horizontally or vertically.
+  - Four in a row is better than three because it may create a striped candy.
+  - Five in a row or T/L shapes are high priority because they may create powerful special candies.
+  - Prefer swaps that combine or create special candies when visible.
+action_rules:
+  - To perform a board move, use a swipe action from the first candy center to the adjacent candy center.
+  - Use tap only for popups or level UI, not for board swaps.
+  - Keep intent as one short sentence describing which two candies are swapped and why.
+avoid:
+  - Do not open the store, buy moves, spend currency, watch ads, or tap booster purchase prompts.
+  - Do not choose wait when a clear valid swap is visible.

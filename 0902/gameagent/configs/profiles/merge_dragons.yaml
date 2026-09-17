@@ -1,0 +1,31 @@
+name: Merge Dragons
+objective: Progress the camp or level by safely merging three or more identical objects inside the active green playable land.
+priorities:
+  - First identify the active green playable area; only interact with objects and destinations inside that area.
+  - Look for three identical objects that can be made adjacent by dragging one object freely within the green area.
+  - Prefer merges that complete quests, heal land, unlock blocked tiles, create higher-level objects, or open more usable space.
+  - Prefer obvious 3-object merges over uncertain moves; prefer 5-object merges only when all five matching objects are clearly visible and reachable.
+  - If tutorial, help, mission, or rule text appears on screen, read it and use that information to choose the next move or continue action.
+  - If no safe merge is visible, tap or close only clear progress UI; otherwise wait briefly.
+screen_rules:
+  - The map pans when swiping outside the active green playable area, so never start, end, or route a swipe outside the green area.
+  - Do not drag from the inactive map, fog, UI panels, shop, sidebars, buttons, or areas outside the green playable land.
+  - If an object is partly outside the active green land or its destination would leave the green area, skip that move.
+  - If the board is animating, merging, loading, or objects are moving, wait.
+  - If a popup blocks the field, close or confirm it only if it is required to continue.
+match_rules:
+  - A merge is valid when three or more identical objects become orthogonally adjacent.
+  - Three identical objects in a straight horizontal or vertical line are valid.
+  - Bent corner groups are also valid: L-shapes, ㄴ shapes, and ㄱ shapes count when all three objects touch through up/down/left/right adjacency.
+  - Diagonal-only contact does not count, and three visually different objects do not count.
+  - The moved object does not need to swap with a neighboring object; it can be dragged freely within the green area to complete a valid adjacent group.
+  - Do not move an object unless the final placement creates or clearly contributes to a valid merge.
+action_rules:
+  - To merge objects, use a swipe action as a drag from the center of the movable object to the center of the target matching object or the safe landing point between matching objects.
+  - Keep the swipe short and contained inside the active green playable area whenever possible.
+  - Use tap only for popups, reward/continue UI, or clearly labeled progress buttons, not for ordinary object movement.
+  - Keep intent as one short sentence describing which object is dragged where and why it creates a merge.
+avoid:
+  - Do not swipe empty non-green map areas because that pans the map instead of moving an object.
+  - Do not open the shop, spend currency, buy items, watch ads, or tap purchase prompts.
+  - Do not merge rare, high-value, or clearly limited objects unless it is visibly required by the level or tutorial.

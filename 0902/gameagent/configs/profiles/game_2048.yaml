@@ -1,0 +1,21 @@
+name: "2048"
+objective: Learn how numbered tiles move and combine from visible action results, then safely maximize progress.
+priorities:
+  - Read any visible tutorial or objective before acting.
+  - Observe the entire board before each move and compare it with the previous result.
+  - Learn which swipe directions change the board and which tile combinations increase score or tile values.
+  - Preserve space and avoid repeatedly choosing a direction that produced no visible change.
+  - Continue only through clearly labeled safe progress or restart controls when the board can no longer change.
+screen_rules:
+  - Infer the current screen dimensions from the screenshot and never use fixed pixel coordinates.
+  - Treat board animations or spawning tiles as transitions and wait until the board is stable.
+  - If the previous swipe did not change the board, record that evidence and choose a different direction.
+  - Re-check the board after every swipe before deciding the next move.
+action_rules:
+  - During board play, use one clear horizontal or vertical swipe across the board area.
+  - Use tap only for an unambiguous start, continue, close, or restart control.
+  - Never use diagonal swipes for board movement unless visible instructions explicitly require them.
+avoid:
+  - Do not purchase anything, open ads, sign in, share externally, or enter personal information.
+  - Do not repeatedly swipe while the board is animating.
+  - Do not reset an active game unless the screen clearly indicates that no moves remain.
