@@ -15,6 +15,7 @@ control:
   timeout_ms: 10000
   allowed_actions:
     - tap
+    - double_tap
     - swipe
     - long_press
     - wait

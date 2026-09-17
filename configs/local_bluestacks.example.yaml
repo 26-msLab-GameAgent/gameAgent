@@ -25,6 +25,7 @@ control:
   min_action_interval_ms: 250
   allowed_actions:
     - tap
+    - double_tap
     - swipe
     - long_press
     - wait

@@ -7,7 +7,7 @@ runtime:
 
 capture:
   adapter: adb_screencap
-  device_id: 127.0.0.1:5555
+  device_id: 127.0.0.1:15555
   adb_path: tools/platform-tools/adb
   adb_server_socket: tcp:127.0.0.1:15037
   timeout_ms: 30000
@@ -19,7 +19,7 @@ capture:
 
 control:
   adapter: adb_touch
-  device_id: 127.0.0.1:5555
+  device_id: 127.0.0.1:15555
   adb_path: tools/platform-tools/adb
   adb_server_socket: tcp:127.0.0.1:15037
   timeout_ms: 30000
@@ -27,6 +27,7 @@ control:
   min_action_interval_ms: 250
   allowed_actions:
     - tap
+    - double_tap
     - swipe
     - long_press
     - wait
@@ -35,7 +36,7 @@ control:
 
 model:
   provider: remote_inference
-  endpoint: http://127.0.0.1:18082/v1/decide
+  endpoint: http://127.0.0.1:18083/v1/decide
   model: local_qwen_vl
   timeout_ms: 120000
   max_retries: 1

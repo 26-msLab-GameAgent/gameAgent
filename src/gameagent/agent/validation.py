@@ -22,7 +22,7 @@ class ActionValidator:
                 reason=f"action type is not allowed: {action.type.value}",
             )
 
-        if action.type in {ActionType.TAP, ActionType.LONG_PRESS} and (
+        if action.type in {ActionType.TAP, ActionType.DOUBLE_TAP, ActionType.LONG_PRESS} and (
             action.x is None or action.y is None
         ):
             return Action(

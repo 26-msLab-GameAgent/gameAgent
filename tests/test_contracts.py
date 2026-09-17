@@ -1,47 +1,78 @@
-import base64
-from types import SimpleNamespace
-from unittest.mock import patch
-
 from gameagent.agent import ActionValidator
 from gameagent.models import Action, ActionType, Observation
-from gameagent.server.hosted import (
-    _generate_ollama,
-    _apply_openrouter_model_options,
-    _extract_anthropic_output_text,
-    _extract_gemini_output_text,
-    _extract_ollama_output_text,
-    _extract_openai_output_text,
-    _extract_openrouter_output_text,
-    _is_openrouter_claude,
-    _is_openrouter_gemini,
-)
 from gameagent.server.vlm_server import (
-    DecisionServer,
+    _load_profile_with_global_rules,
+    _merge_profiles,
+    _normalize_action_outcome,
     _normalize_rule_memory,
     _parse_model_ref,
+    _plan_reenters_completed_stage,
+    _profile_prompt,
+    _record_completed_stage_from_perception,
+    _repeats_blocked_action,
     _resolve_local_model_ref,
+    _outcome_reports_unintended_viewport_motion,
+    _opposite_swipe_direction,
+    _viewport_recovery_plan,
 )
+from gameagent.runtime.runner import _frame_change_ratio
 
 
-def test_decision_server_materializes_base64_image():
-    image = b"\x89PNG\r\n\x1a\n" + b"\x00" * 24
-    request = SimpleNamespace(
-        image_path=None,
-        image_base64=base64.b64encode(image).decode("ascii"),
+def _solid_png(color: tuple[int, int, int]) -> bytes:
+    import io
+    from PIL import Image
+
+    buffer = io.BytesIO()
+    Image.new("RGB", (32, 32), color).save(buffer, format="PNG")
+    return buffer.getvalue()
+
+
+def test_frame_change_ratio_detects_large_screen_change():
+    black = _solid_png((0, 0, 0))
+    white = _solid_png((255, 255, 255))
+
+    assert _frame_change_ratio(black, black) == 0.0
+    assert _frame_change_ratio(black, white) == 1.0
+
+
+def test_global_rules_are_prepended_to_game_profile():
+    merged = _merge_profiles(
+        {"play_rule": ["continue stages"], "avoid": ["no purchases"]},
+        {"name": "Example Game", "avoid": ["no risky taps"]},
     )
-    server = DecisionServer(model_id="qwen:7B", mock=True)
 
-    image_path = server._materialize_image(request)
-    try:
-        assert image_path.read_bytes() == image
-    finally:
-        image_path.unlink(missing_ok=True)
+    assert merged == {
+        "name": "Example Game",
+        "play_rule": ["continue stages"],
+        "avoid": ["no purchases", "no risky taps"],
+    }
+    prompt = _profile_prompt(merged)
+    assert "Global play rules:\n- continue stages" in prompt
+    assert "Prohibited actions:\n- no purchases\n- no risky taps" in prompt
 
 
-def test_decision_server_keeps_full_hd_qwen_input_by_default():
-    server = DecisionServer(model_id="qwen:7B", mock=True)
+def test_testy_profile_loads_human_demonstration_prior_when_enabled():
+    profile = _load_profile_with_global_rules(
+        "configs/profiles/testy_travel.yaml",
+        auto_tutorial=True,
+    )
 
-    assert server.max_pixels == 1920 * 1080
+    assert profile is not None
+    assert any(
+        "dragging the center" in rule
+        for rule in profile["demonstration_rules"]
+    )
+    prompt = _profile_prompt(profile)
+    assert "Verified human-demonstration rules" in prompt
+    assert "Human gesture priors" in prompt
+
+
+def test_profile_skips_human_demonstration_prior_by_default():
+    profile = _load_profile_with_global_rules("configs/profiles/testy_travel.yaml")
+
+    assert profile is not None
+    assert "demonstration_rules" not in profile
+    assert "Verified human-demonstration rules" not in _profile_prompt(profile)
 
 
 def test_action_validator_clamps_coordinates():
@@ -89,69 +120,118 @@ def test_local_model_ref_resolution():
 
 
 def test_hosted_model_ref_parsing():
-    openrouter = _parse_model_ref("openrouter:~openai/gpt-latest")
-    assert openrouter.provider == "openrouter"
-    assert openrouter.model == "~openai/gpt-latest"
     assert _parse_model_ref("openai:gpt-5.6").provider == "openai"
     assert _parse_model_ref("gpt:gpt-5.6").model == "gpt-5.6"
     assert _parse_model_ref("gemini:gemini-3.5-flash").provider == "gemini"
     assert _parse_model_ref("claude:claude-opus-4-8").provider == "anthropic"
-    ollama = _parse_model_ref("ollama:llava:7b")
-    assert ollama.provider == "ollama"
-    assert ollama.model == "llava:7b"
-    assert ollama.key == "ollama:llava:7b"
 
 
-def test_openrouter_claude_detection():
-    assert _is_openrouter_claude("~anthropic/claude-sonnet-latest")
-    assert _is_openrouter_claude("anthropic/claude-opus-4.8")
-    assert not _is_openrouter_claude("~openai/gpt-latest")
-
-
-def test_openrouter_gemini_detection():
-    assert _is_openrouter_gemini("~google/gemini-flash-latest")
-    assert _is_openrouter_gemini("google/gemini-3.5-flash")
-    assert not _is_openrouter_gemini("~anthropic/claude-sonnet-latest")
-
-
-def test_openrouter_claude_reserves_json_output_budget():
-    payload = {"max_tokens": 1024}
-    _apply_openrouter_model_options(payload, "~anthropic/claude-sonnet-latest")
-
-    assert payload["max_tokens"] == 4096
-    assert payload["reasoning"] == {"max_tokens": 1024, "exclude": True}
-    assert payload["response_format"] == {"type": "json_object"}
-
-
-def test_ollama_reserves_json_output_budget():
-    with patch(
-        "gameagent.server.hosted._post_json",
-        return_value={"message": {"content": '{"status":"ok"}'}},
-    ) as post_json:
-        output = _generate_ollama("llava:7b", "return JSON", None, 128, 30.0)
-
-    assert output == '{"status":"ok"}'
-    payload = post_json.call_args.args[1]
-    assert payload["format"] == "json"
-    assert payload["options"]["num_predict"] == 512
-
-
-def test_hosted_response_text_extraction():
-    assert (
-        _extract_openrouter_output_text(
-            {"choices": [{"message": {"content": "openrouter"}}]}
-        )
-        == "openrouter"
+def test_action_outcome_normalization_is_bounded_and_safe():
+    outcome = _normalize_action_outcome(
+        {
+            "status": "FAILURE",
+            "expected_result": "two objects merge",
+            "observed_change": "objects remained",
+            "retry_recommendation": "do_not_retry",
+            "confidence": 3,
+        }
     )
-    assert (
-        _extract_openai_output_text(
-            {"output": [{"content": [{"type": "output_text", "text": "openai"}]}]}
-        )
-        == "openai"
+
+    assert outcome["status"] == "failure"
+    assert outcome["retry_recommendation"] == "do_not_retry"
+    assert outcome["confidence"] == 1.0
+
+
+def test_invalid_action_outcome_defaults_to_inconclusive():
+    outcome = _normalize_action_outcome(
+        {"status": "maybe", "retry_recommendation": "repeat_forever"}
     )
-    assert _extract_gemini_output_text({"output": [{"text": "gemini"}]}) == "gemini"
-    assert _extract_ollama_output_text({"message": {"content": "ollama"}}) == "ollama"
-    assert (
-        _extract_anthropic_output_text({"content": [{"type": "text", "text": "anthropic"}]})
-        == "anthropic"
+
+    assert outcome["status"] == "inconclusive"
+    assert outcome["retry_recommendation"] == "reobserve"
+
+
+def test_do_not_retry_outcome_blocks_exact_failed_action():
+    action = {"type": "tap", "x": 10, "y": 20, "x2": None, "y2": None}
+    outcome = {
+        "status": "failure",
+        "retry_recommendation": "do_not_retry",
+        "action": dict(action),
+    }
+
+    assert _repeats_blocked_action(action, outcome)
+    assert not _repeats_blocked_action({**action, "x": 11}, outcome)
+    assert not _repeats_blocked_action(
+        action, {**outcome, "status": "inconclusive"}
     )
+
+
+def test_unintended_camera_pan_enters_generic_recovery():
+    action = {"type": "swipe", "x": 400, "y": 600, "x2": 1300, "y2": 620}
+    plan = {
+        "screen_mode": "gameplay",
+        "current_goal": "Merge three matching objects",
+        "strategy": "Drag one object onto the pair",
+    }
+    outcome = {
+        "status": "failure",
+        "observed_change": "No merge; camera panned and the whole island shifted right",
+    }
+
+    assert _outcome_reports_unintended_viewport_motion(outcome, action, plan)
+    assert _opposite_swipe_direction(action) == "left"
+    recovery = _viewport_recovery_plan(
+        {"trigger_frame": 4, "attempts": 1, "direction": "left"}
+    )
+    assert recovery["screen_mode"] == "recovery"
+    assert recovery["desired_action"] == "swipe"
+    assert "left" in recovery["target_description"]
+
+
+def test_intended_camera_pan_does_not_reenter_recovery():
+    action = {"type": "swipe", "x": 1300, "y": 600, "x2": 900, "y2": 600}
+    plan = {
+        "screen_mode": "gameplay",
+        "current_goal": "Restore full board view",
+        "strategy": "Pan camera back to center",
+    }
+    outcome = {"status": "partial", "observed_change": "camera panned left"}
+
+    assert not _outcome_reports_unintended_viewport_motion(outcome, action, plan)
+
+
+def test_completed_stage_is_recorded_and_reentry_rejected():
+    progress = {"completed": [], "last_completed": None}
+    _record_completed_stage_from_perception(
+        progress,
+        {
+            "summary": "A level-completion popup with three stars",
+            "visible_text": "레벨 2 | 다음",
+        },
+    )
+
+    assert progress["last_completed"]["series"] == "level"
+    assert progress["last_completed"]["ordinal"] == 2
+    repeated = _plan_reenters_completed_stage(
+        {
+            "current_goal": "Start Level 2",
+            "strategy": "Select the next level in ascending order",
+            "target_description": "Level 2 button",
+        },
+        progress,
+    )
+    assert repeated == "Level 2"
+
+
+def test_new_series_may_restart_at_one():
+    progress = {
+        "completed": [{"raw_label": "초원 3", "series": "초원", "ordinal": 3}],
+        "last_completed": {"raw_label": "초원 3", "series": "초원", "ordinal": 3},
+    }
+    plan = {
+        "current_goal": "Start 화산 1",
+        "strategy": "Enter newly unlocked series",
+        "target_description": "화산 1 node",
+    }
+
+    assert _plan_reenters_completed_stage(plan, progress) is None

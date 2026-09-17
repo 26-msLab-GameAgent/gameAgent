@@ -11,6 +11,7 @@ htmlcov/
 venv/
 
 agent_runs/
+state/
 runs/
 STOP
 *.log
@@ -27,3 +28,4 @@ tools/
 .env.*
 .secrets/
 *.key
+*.pem

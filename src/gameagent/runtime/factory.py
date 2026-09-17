@@ -95,12 +95,18 @@ def build_validator(config: AppConfig) -> ActionValidator:
 
 def build_logger(config: AppConfig) -> EpisodeLogger:
     storage = config.storage
+    capture = config.capture
+    adb_capture = str(capture.get("adapter", "mock")) == "adb_screencap"
     return EpisodeLogger(
         run_dir=str(storage.get("run_dir", "./runs")),
         save_frames=bool(storage.get("save_frames", True)),
         save_model_raw_response=bool(storage.get("save_model_raw_response", True)),
         timestamped_run_dir=bool(storage.get("timestamped_run_dir", True)),
         numbered_run_dir=bool(storage.get("numbered_run_dir", False)),
+        video_recording=bool(storage.get("record_video", True)) and adb_capture,
+        adb_path=str(capture.get("adb_path", "adb")),
+        adb_device_id=str(capture.get("device_id", "auto")),
+        adb_server_socket=_optional_str(capture.get("adb_server_socket")),
     )
 
 

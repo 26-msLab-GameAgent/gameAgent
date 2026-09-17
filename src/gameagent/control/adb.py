@@ -37,6 +37,36 @@ class AdbControlAdapter:
             time.sleep(max(action.duration_ms, 0) / 1000)
             return ExecutionResult(ok=True, message="wait complete")
 
+        if action.type == ActionType.DOUBLE_TAP:
+            _require_xy(action)
+            cmd = self._base_cmd() + ["shell", "input", "tap", str(action.x), str(action.y)]
+            started = time.perf_counter()
+            for index in range(2):
+                proc = subprocess.run(
+                    cmd,
+                    capture_output=True,
+                    timeout=self.timeout_s,
+                    check=False,
+                    env=_adb_env(self.adb_server_socket),
+                )
+                if proc.returncode != 0:
+                    stderr = proc.stderr.decode("utf-8", errors="replace").strip()
+                    return ExecutionResult(
+                        ok=False,
+                        message=f"ADB double tap failed: {stderr or proc.returncode}",
+                        latency_ms=int((time.perf_counter() - started) * 1000),
+                    )
+                if index == 0:
+                    time.sleep(max(40, min(action.duration_ms, 250)) / 1000)
+            latency_ms = int((time.perf_counter() - started) * 1000)
+            self._last_action_at = time.perf_counter()
+            return ExecutionResult(
+                ok=True,
+                message="executed double_tap",
+                latency_ms=latency_ms,
+                metadata={"device_id": self.device_id, "frame_id": observation.frame_id},
+            )
+
         cmd = self._command_for(action)
         started = time.perf_counter()
         proc = subprocess.run(

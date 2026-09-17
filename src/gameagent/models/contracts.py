@@ -9,6 +9,7 @@ from typing import Any, Protocol
 
 class ActionType(str, Enum):
     TAP = "tap"
+    DOUBLE_TAP = "double_tap"
     SWIPE = "swipe"
     LONG_PRESS = "long_press"
     WAIT = "wait"

@@ -27,6 +27,16 @@ def main(argv: list[str] | None = None) -> None:
     run_parser.add_argument("--config", required=True, help="YAML or JSON config path")
     run_parser.add_argument("--steps", type=int, default=None, help="override max episode steps")
     run_parser.add_argument("--dry-run", action="store_true", help="capture and decide, but do not act")
+    run_parser.add_argument(
+        "--device-id",
+        default=None,
+        help="override capture/control ADB device for this run",
+    )
+    run_parser.add_argument(
+        "--adb-server-socket",
+        default=None,
+        help="override capture/control ADB server, e.g. tcp:127.0.0.1:15038",
+    )
 
     doctor_parser = subparsers.add_parser("doctor", help="check local runtime dependencies")
     doctor_parser.add_argument("--adb-path", default="adb")
@@ -36,13 +46,33 @@ def main(argv: list[str] | None = None) -> None:
     if args.command == "doctor":
         raise SystemExit(_doctor(args.adb_path))
     if args.command == "run":
-        raise SystemExit(_run(args.config, args.steps, args.dry_run))
+        raise SystemExit(
+            _run(
+                args.config,
+                args.steps,
+                args.dry_run,
+                args.device_id,
+                args.adb_server_socket,
+            )
+        )
 
 
-def _run(config_path: str, steps: int | None, dry_run: bool) -> int:
+def _run(
+    config_path: str,
+    steps: int | None,
+    dry_run: bool,
+    device_id: str | None = None,
+    adb_server_socket: str | None = None,
+) -> int:
     config = load_config(config_path)
     if steps is not None:
         config.runtime["max_episode_steps"] = steps
+    if device_id is not None:
+        config.capture["device_id"] = device_id
+        config.control["device_id"] = device_id
+    if adb_server_socket is not None:
+        config.capture["adb_server_socket"] = adb_server_socket
+        config.control["adb_server_socket"] = adb_server_socket
 
     capture = build_capture(config)
     control = build_control(config)
@@ -52,6 +82,10 @@ def _run(config_path: str, steps: int | None, dry_run: bool) -> int:
     options = RunnerOptions(
         tick_interval_ms=int(config.runtime.get("tick_interval_ms", 800)),
         settle_after_action_ms=int(config.runtime.get("settle_after_action_ms", 800)),
+        pre_action_refresh=bool(config.runtime.get("pre_action_refresh", False)),
+        max_pre_action_frame_change=float(
+            config.runtime.get("max_pre_action_frame_change", 0.08)
+        ),
         max_episode_steps=int(config.runtime.get("max_episode_steps", 1000)),
         emergency_stop_path=config.runtime.get("emergency_stop_path"),
         dry_run=dry_run,

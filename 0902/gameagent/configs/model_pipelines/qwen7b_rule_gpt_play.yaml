@@ -1,8 +1,0 @@
-# Model refs can be qwen:3B, qwen:7B, hf:<model-id>, or openai:<model>.
-default_model: openai:gpt-5.6
-
-agents:
-  perception: openai:gpt-5.6
-  rule_learner: qwen:7B
-  planner: openai:gpt-5.6
-  policy: openai:gpt-5.6

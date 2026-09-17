@@ -35,6 +35,10 @@ class AdbCaptureAdapter:
         _ensure_adb(self.adb_path)
         started = time.perf_counter()
         method = self.capture_method
+        print(
+            f"[capture] frame={frame_id} device={self.device_id} method={method}",
+            flush=True,
+        )
         if method == "exec_out":
             image_bytes = self._capture_exec_out()
         elif method == "file_pull":
@@ -43,9 +47,23 @@ class AdbCaptureAdapter:
             try:
                 image_bytes = self._capture_exec_out()
                 method = "exec_out"
-            except Exception:
-                image_bytes = self._capture_file_pull(frame_id)
-                method = "file_pull"
+            except Exception as first_error:
+                print(
+                    f"[capture] exec-out failed: {type(first_error).__name__}: {first_error}",
+                    flush=True,
+                )
+                self._reconnect_device()
+                try:
+                    image_bytes = self._capture_exec_out()
+                    method = "exec_out_after_reconnect"
+                except Exception as retry_error:
+                    print(
+                        "[capture] exec-out retry failed; trying file-pull: "
+                        f"{type(retry_error).__name__}: {retry_error}",
+                        flush=True,
+                    )
+                    image_bytes = self._capture_file_pull(frame_id)
+                    method = "file_pull"
         else:
             raise ValueError(f"Unknown ADB capture method: {method}")
         latency_ms = int((time.perf_counter() - started) * 1000)
@@ -67,6 +85,22 @@ class AdbCaptureAdapter:
                 "raw_height": height,
             },
         )
+
+    def _reconnect_device(self) -> None:
+        if not self.device_id or self.device_id == "auto" or ":" not in self.device_id:
+            return
+        print(f"[capture] reconnecting ADB device {self.device_id}", flush=True)
+        for action in ("disconnect", "connect"):
+            proc = _run_adb(
+                [self.adb_path, action, self.device_id],
+                timeout_s=min(self.timeout_s, 10.0),
+                adb_server_socket=self.adb_server_socket,
+            )
+            message = (
+                proc.stdout.decode("utf-8", errors="replace").strip()
+                or proc.stderr.decode("utf-8", errors="replace").strip()
+            )
+            print(f"[capture] adb {action}: {message or proc.returncode}", flush=True)
 
     def _base_cmd(self) -> list[str]:
         if self.device_id and self.device_id != "auto":
