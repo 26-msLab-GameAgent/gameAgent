@@ -1,0 +1,33 @@
+runtime:
+  mode: local_game_remote_model
+  tick_interval_ms: 800
+  max_episode_steps: 1000
+  emergency_stop_path: ./STOP
+
+capture:
+  adapter: adb_screencap
+  device_id: auto
+  adb_path: tools/platform-tools/adb
+  output_format: png
+  resize:
+    width: 1920
+    height: 1080
+
+control:
+  adapter: adb_touch
+  device_id: auto
+  adb_path: tools/platform-tools/adb
+  coordinate_space: device
+  min_action_interval_ms: 250
+
+model:
+  provider: remote_inference
+  endpoint: http://127.0.0.1:18081/v1/decide
+  model: local_qwen_vl
+  timeout_ms: 30000
+  max_retries: 2
+
+storage:
+  run_dir: ./agent_runs
+  save_frames: true
+  save_model_raw_response: true

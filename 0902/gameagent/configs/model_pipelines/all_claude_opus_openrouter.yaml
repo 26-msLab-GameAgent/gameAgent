@@ -1,0 +1,9 @@
+# "openai:" selects the OpenAI-compatible transport used by OpenRouter.
+# "anthropic/claude-opus-5" is the OpenRouter model slug.
+default_model: openai:anthropic/claude-opus-5
+
+agents:
+  perception: openai:anthropic/claude-opus-5
+  rule_learner: openai:anthropic/claude-opus-5
+  planner: openai:anthropic/claude-opus-5
+  policy: openai:anthropic/claude-opus-5

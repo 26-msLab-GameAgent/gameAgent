@@ -1,0 +1,51 @@
+runtime:
+  mode: local_bluestacks_local_vlm
+  tick_interval_ms: 0
+  settle_after_action_ms: 1200
+  max_episode_steps: 1000
+  emergency_stop_path: ./STOP
+
+capture:
+  adapter: adb_screencap
+  device_id: 127.0.0.1:15555
+  adb_path: /home/ub0311/tools/platform-tools/adb
+  adb_server_socket: null
+  timeout_ms: 30000
+  capture_method: auto
+  output_format: png
+
+control:
+  adapter: adb_touch
+  device_id: 127.0.0.1:15555
+  adb_path: /home/ub0311/tools/platform-tools/adb
+  adb_server_socket: null
+  timeout_ms: 30000
+  coordinate_space: device
+  min_action_interval_ms: 250
+  allowed_actions:
+    - tap
+    - double_tap
+    - swipe
+    - long_press
+    - wait
+    - back
+    - noop
+
+model:
+  provider: remote_inference
+  endpoint: http://127.0.0.1:18093/v1/decide
+  model: openrouter_all_claude_opus_5
+  timeout_ms: 120000
+  max_retries: 1
+
+storage:
+  run_dir: /data/project/gameagent_yb/0902/gameagent/agent_runs/candy
+  timestamped_run_dir: true
+  numbered_run_dir: false
+  save_frames: true
+  save_model_raw_response: true
+
+guards:
+  clamp_coordinates: true
+  stop_on_sensitive_screen: true
+  max_repeated_action_count: 3
