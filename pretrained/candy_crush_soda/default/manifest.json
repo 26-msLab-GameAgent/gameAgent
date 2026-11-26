@@ -1,0 +1,31 @@
+{
+  "game": "candy_crush_soda",
+  "version": "20260929T204651-6c68d645",
+  "status": "candidate",
+  "sha256": "3ebcf74fcf39020911847794812103b59e4036620919545807fececc65a41908",
+  "perception_validation": {
+    "status": "passed",
+    "sha256": "3ebcf74fcf39020911847794812103b59e4036620919545807fececc65a41908",
+    "board_examples": 1,
+    "failure_kind": null,
+    "errors": []
+  },
+  "generator_model": "anthropic/claude-opus-5",
+  "generator_base_url": "https://openrouter.ai/api/v1",
+  "max_output_tokens": 32000,
+  "reasoning_effort": "low",
+  "assumptions": [
+    "Board is an axis-aligned uniform grid whose candy sprites are saturated non-blue blobs; board background is blue.",
+    "Cell pitch equals median nearest-neighbour blob distance; grid axes derived from clustered blob centroids inside the largest regular column chain.",
+    "Hue ranges map to canonical candy colors; teal gummy-bear pixels and white frosting tiles are reported as blocker.",
+    "Frosted cells with no visible candy color are reported empty/blocker rather than a candy color.",
+    "Greedy largest-resulting-run swap is an acceptable move policy."
+  ],
+  "limitations": [
+    "Special candies (striped, wrapped, fish, color bomb) are labeled by base color only; their extra effects are not modeled.",
+    "Irregular board outlines are approximated by the bounding rectangle; non-playable holes may be labeled empty.",
+    "No detection of locks, honey or multi-layer frosting that make a swap invalid.",
+    "Animation/overlay frames are rejected only via unknown-label fraction, so some unsettled frames may be missed.",
+    "Level goals, moves left and score are not read; signature covers grid geometry and labels only."
+  ]
+}

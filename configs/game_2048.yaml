@@ -1,0 +1,50 @@
+runtime:
+  mode: local_bluestacks_local_vlm
+  tick_interval_ms: 0
+  settle_after_action_ms: 500
+  pre_action_refresh: true
+  max_pre_action_frame_change: 0.08
+  max_episode_steps: 1000
+  step_budget_mode: actions
+  max_idle_seconds: 120
+  emergency_stop_path: STOP
+capture:
+  adapter: adb_screencap
+  device_id: SET_WITH_CONFIGURE
+  adb_path: adb
+  adb_server_socket: null
+  timeout_ms: 30000
+  capture_method: auto
+  output_format: png
+control:
+  adapter: adb_touch
+  device_id: SET_WITH_CONFIGURE
+  adb_path: adb
+  adb_server_socket: null
+  timeout_ms: 30000
+  coordinate_space: device
+  min_action_interval_ms: 250
+  allowed_actions:
+  - tap
+  - double_tap
+  - swipe
+  - long_press
+  - wait
+  - back
+  - noop
+model:
+  provider: remote_inference
+  endpoint: http://127.0.0.1:18097/v1/decide
+  model: adaptive_screen_router_0916
+  timeout_ms: 120000
+  max_retries: 0
+storage:
+  run_dir: outputs/game_2048
+  timestamped_run_dir: true
+  numbered_run_dir: false
+  save_frames: true
+  save_model_raw_response: true
+guards:
+  clamp_coordinates: true
+  stop_on_sensitive_screen: true
+  max_repeated_action_count: 3

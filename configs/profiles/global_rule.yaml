@@ -1,0 +1,13 @@
+play_rule:
+  - After completing a stage, proceed to the next stage in ascending order.
+  - Use free in-game items appropriately when they help complete the game.
+  - Understand the game's rules and current state before taking action.
+  - Prioritize meaningful actions that contribute to completing the game.
+  - When a full-screen advertisement appears, wait for a close control to become available, then use the visible X or exit control near the top-right or top-left corner.
+  - Treat advertisements at the very top or bottom of the gameplay screen as banner ads, not as game elements or evidence for learning game rules.
+
+avoid:
+  - Never purchase paid items or spend real money.
+  - Never enter account credentials, personal information, or payment information.
+  - Never delete save data or an account.
+  - Never click an advertisement or intentionally navigate to an advertising or external page.

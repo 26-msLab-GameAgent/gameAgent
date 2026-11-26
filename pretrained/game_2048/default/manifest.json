@@ -1,0 +1,29 @@
+{
+  "game": "game_2048",
+  "version": "20260930T155300-27d4d185",
+  "status": "active",
+  "sha256": "57fa5012a4c34581c07546602b9fe5cc9a8788a03d9861ad73f815ec777ac745",
+  "perception_validation": {
+    "status": "passed",
+    "sha256": "57fa5012a4c34581c07546602b9fe5cc9a8788a03d9861ad73f815ec777ac745",
+    "board_examples": 7,
+    "failure_kind": null,
+    "errors": []
+  },
+  "generator_model": "anthropic/claude-opus-5",
+  "generator_base_url": "https://openrouter.ai/api/v1",
+  "max_output_tokens": 32000,
+  "reasoning_effort": "low",
+  "assumptions": [
+    "Board is always 4x4 with the classic 2048 palette and gray frame/empty cells.",
+    "Board region is the largest near-square gray-frame component; refined by row/column coverage when the coarse box overshoots.",
+    "Tile values are inferred from median tile background color matched to the scaled palette.",
+    "Swipes across the board center move all tiles; distance ~32% of board size each way."
+  ],
+  "limitations": [
+    "No OCR: values beyond 2048 or recolored themes may be labeled unknown.",
+    "Cannot distinguish mid-animation frames reliably; transient frames may be labeled unknown and rejected.",
+    "Heuristic 2-ply search, not optimal expectimax.",
+    "No game-over detection beyond 'no direction changes the board'."
+  ]
+}

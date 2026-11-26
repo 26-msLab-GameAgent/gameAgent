@@ -1,0 +1,8 @@
+# Screen classification is independently configured to use OpenRouter.
+# All board pipeline roles share one cached local Qwen model.
+default_model: qwen:8B
+agents:
+  perception: qwen:8B
+  rule_learner: qwen:8B
+  planner: qwen:8B
+  policy: qwen:8B

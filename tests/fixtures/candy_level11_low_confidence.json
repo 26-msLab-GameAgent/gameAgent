@@ -1,0 +1,32 @@
+{
+  "state": "S",
+  "confidence": 0.86,
+  "evidence": "Map/home screen with candy city background, horizontal row of level tiles (8, 9, 10 with 3 stars, greyed 12, 13, 14, 15), left side navigation with 홈 star button, lives/coins/timer HUD at top, settings gear top-right; no board grid or overlay",
+  "stage": null,
+  "board_bbox": null,
+  "board_confidence": 0.0,
+  "controls": [
+    {
+      "id": "current_level_tile",
+      "role": "stage",
+      "grounding_description": "Blue highlighted level tile with pause/play icon and small skull badge, in the level row between tile '10' and greyed tile '12' at bottom center",
+      "label": "blue level tile (skull badge)",
+      "stage": null,
+      "confidence": 0.62,
+      "enabled": true,
+      "free": true
+    },
+    {
+      "id": "home_button",
+      "role": "home",
+      "grounding_description": "Yellow star icon button labeled '홈' in the left vertical navigation bar",
+      "label": "홈",
+      "stage": null,
+      "confidence": 0.8,
+      "enabled": true,
+      "free": true
+    }
+  ],
+  "visible_text": "4  9:18  50  홈  8  9  10  12  13  14  15",
+  "preferred_control_id": "current_level_tile"
+}

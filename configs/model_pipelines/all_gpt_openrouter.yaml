@@ -1,0 +1,9 @@
+# The first "openai:" selects the OpenAI-compatible hosted provider.
+# The remaining value is the OpenRouter model slug.
+default_model: openai:openai/gpt-5.6-luna
+
+agents:
+  perception: openai:openai/gpt-5.6-luna
+  rule_learner: openai:openai/gpt-5.6-luna
+  planner: openai:openai/gpt-5.6-luna
+  policy: openai:openai/gpt-5.6-luna

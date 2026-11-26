@@ -1,0 +1,30 @@
+{
+  "game": "candy_crush_soda",
+  "version": "20260930T181524-cd4ba527",
+  "status": "candidate",
+  "sha256": "4658503ff56bcbace970190cb607be54ab47d99d2b4f93fc2070786a16b24ee0",
+  "perception_validation": {
+    "status": "passed",
+    "sha256": "4658503ff56bcbace970190cb607be54ab47d99d2b4f93fc2070786a16b24ee0",
+    "board_examples": 1,
+    "failure_kind": null,
+    "errors": []
+  },
+  "generator_model": "anthropic/claude-opus-5",
+  "generator_base_url": "https://openrouter.ai/api/v1",
+  "max_output_tokens": 32000,
+  "reasoning_effort": "low",
+  "assumptions": [
+    "Board is an axis-aligned square-pitch grid detected from saturated candy blobs in the central screen region.",
+    "Candy identity is its dominant hue; frosted/tiled cells keep the visible candy color.",
+    "Swipes between adjacent cell centers perform a swap.",
+    "Settled frames only: ambiguous/animated frames are rejected by unknown/colored-coverage thresholds."
+  ],
+  "limitations": [
+    "Special candies (striped, wrapped, fish, color bomb) are treated as their base color and not used strategically.",
+    "Blockers, frosting layers and locked cells are not modeled; only plain match-3 scoring with a small bonus near non-candy cells.",
+    "Irregular/non-rectangular board shapes and partial columns may be rejected.",
+    "Objective counters (moves left, bear progress) are not read; the signature uses only board labels.",
+    "No cascade prediction; the chosen move is greedy on immediate match length."
+  ]
+}

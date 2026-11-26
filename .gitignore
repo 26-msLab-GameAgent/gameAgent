@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+configs/local.json
+services/gui_actor/.env
+outputs/
+solvers/
+state/
+STOP

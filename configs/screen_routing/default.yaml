@@ -1,0 +1,36 @@
+# Semantic screen recognition via OpenRouter, UI coordinates via local GUI Actor.
+classifier_model: openai:anthropic/claude-opus-5
+min_confidence: 0.8
+# Verify low-confidence semantic buttons once before giving up (same local model as B/U).
+ui_recheck_model: qwen:8B
+wait_ms: 1000
+gui_actor:
+  enabled: true
+  url: http://127.0.0.1:8010
+  timeout_s: 20
+  top_k: 5
+unknown_recovery:
+  enabled: true
+  max_attempts: 6
+# Keep the existing Candy solver-first path on B; use VLM after solver rechecks fail.
+enable_board_solver: true
+states:
+  S:
+    roles: [start, stage]
+    # The classifier supplies a semantic tie-breaker after the stage guard.
+    model: null
+  P:
+    roles: [close, dismiss, cancel]
+    model: null
+  C:
+    roles: [next, continue, home]
+    model: null
+  T:
+    roles: [start, confirm, next, continue, skip, close, dismiss]
+    model: null
+  B:
+    allowed_actions: [tap, double_tap, swipe, long_press, wait, noop]
+  L:
+    roles: []
+  U:
+    roles: []

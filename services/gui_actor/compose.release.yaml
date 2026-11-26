@@ -1,0 +1,22 @@
+services:
+  grounder:
+    image: ${GROUNDING_IMAGE:?Set GROUNDING_IMAGE for the target GPU}
+    ports:
+      - "${GROUNDING_PORT:-8010}:8010"
+    environment:
+      GUI_ACTOR_MODEL_PROFILE: ${GUI_ACTOR_MODEL_PROFILE:-ours}
+      GUI_ACTOR_DEVICE: ${GUI_ACTOR_DEVICE:-cuda:0}
+      GUI_ACTOR_DTYPE: ${GUI_ACTOR_DTYPE:-auto}
+      GUI_ACTOR_ATTENTION_IMPLEMENTATION: ${GUI_ACTOR_ATTENTION_IMPLEMENTATION:-auto}
+      GUI_ACTOR_LOG_LEVEL: ${GUI_ACTOR_LOG_LEVEL:-INFO}
+    volumes:
+      - ${GUI_ACTOR_MODELS_ROOT:?Set GUI_ACTOR_MODELS_ROOT to the directory containing base and ours}:/models:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    init: true
+    restart: unless-stopped

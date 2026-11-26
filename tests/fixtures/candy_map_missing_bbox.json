@@ -1,0 +1,92 @@
+{
+  "state": "S",
+  "confidence": 0.93,
+  "evidence": "Home map scene with candy town background and a row of numbered level tiles (1-5) at the bottom plus left sidebar navigation icons.",
+  "stage": null,
+  "board_bbox": null,
+  "board_confidence": 0,
+  "controls": [
+    {
+      "id": "lvl1",
+      "role": "stage",
+      "grounding_description": "orange square level tile marked '1' with three stars, leftmost in bottom row",
+      "label": "1",
+      "stage": {
+        "series": "level",
+        "ordinal": 1,
+        "confidence": 0.93
+      },
+      "confidence": 0.85,
+      "enabled": true,
+      "free": true
+    },
+    {
+      "id": "lvl2",
+      "role": "stage",
+      "grounding_description": "orange square level tile marked '2' with three stars in bottom row",
+      "label": "2",
+      "stage": {
+        "series": "level",
+        "ordinal": 2,
+        "confidence": 0.93
+      },
+      "confidence": 0.85,
+      "enabled": true,
+      "free": true
+    },
+    {
+      "id": "lvl3",
+      "role": "stage",
+      "grounding_description": "orange square level tile marked '3' with three stars in bottom row",
+      "label": "3",
+      "stage": {
+        "series": "level",
+        "ordinal": 3,
+        "confidence": 0.93
+      },
+      "confidence": 0.85,
+      "enabled": true,
+      "free": true
+    },
+    {
+      "id": "lvl4",
+      "role": "stage",
+      "grounding_description": "orange square level tile marked '4' with three stars in bottom row",
+      "label": "4",
+      "stage": {
+        "series": "level",
+        "ordinal": 4,
+        "confidence": 0.92
+      },
+      "confidence": 0.85,
+      "enabled": true,
+      "free": true
+    },
+    {
+      "id": "lvl5",
+      "role": "stage",
+      "grounding_description": "teal/green square level tile marked '5' with three stars, rightmost in bottom row",
+      "label": "5",
+      "stage": {
+        "series": "level",
+        "ordinal": 5,
+        "confidence": 0.9
+      },
+      "confidence": 0.86,
+      "enabled": true,
+      "free": true
+    },
+    {
+      "id": "home_btn",
+      "role": "home",
+      "grounding_description": "yellow star icon labeled '홈' in the left vertical sidebar",
+      "label": "홈",
+      "stage": null,
+      "confidence": 0.8,
+      "enabled": true,
+      "free": true
+    }
+  ],
+  "visible_text": "Full, 50, 홈, 1, 2, 3, 4, 5",
+  "preferred_control_id": "lvl5"
+}

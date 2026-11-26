@@ -1,0 +1,32 @@
+{
+  "candy_crush_soda": {
+    "default": {
+      "version": "20260929T204651-6c68d645",
+      "source": "0928/solvers/candy_crush_soda/20260929T204651-6c68d645",
+      "sha256": "3ebcf74fcf39020911847794812103b59e4036620919545807fececc65a41908",
+      "selection_reason": "로컬 진행 및 낮은 VLM 대체 비중을 우선"
+    },
+    "completion": {
+      "version": "20260930T181524-cd4ba527",
+      "source": "0928/solvers/candy_crush_soda/20260930T181524-cd4ba527",
+      "sha256": "4658503ff56bcbace970190cb607be54ab47d99d2b4f93fc2070786a16b24ee0",
+      "selection_reason": "완료 감지가 기록된 대안; VLM 대체 의존이 더 큼"
+    }
+  },
+  "game_2048": {
+    "default": {
+      "version": "20260930T155300-27d4d185",
+      "source": "0928/solvers/game_2048/20260930T155300-27d4d185",
+      "sha256": "57fa5012a4c34581c07546602b9fe5cc9a8788a03d9861ad73f815ec777ac745",
+      "selection_reason": "로컬 진행 검증을 통과한 active 버전"
+    }
+  },
+  "tasty_travel": {
+    "default": {
+      "version": "20260930T124249-21906c4a",
+      "source": "0928/solvers/tasty_travel/20260930T124249-21906c4a",
+      "sha256": "4cd54b2ce0a89d221273d7854c7d54fe1b0ac02a80e40f356d77a3714ef3d6d5",
+      "selection_reason": "기록된 trial 중 로컬 입력 대비 VLM 대체 비중이 낮은 후보; 잠정 검증"
+    }
+  }
+}

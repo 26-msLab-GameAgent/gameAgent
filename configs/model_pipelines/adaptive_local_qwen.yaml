@@ -1,0 +1,7 @@
+# The adaptive router uses ORB/solver for boards and local Qwen for semantic UI calls.
+default_model: qwen:7B
+agents:
+  perception: qwen:7B
+  rule_learner: qwen:7B
+  planner: qwen:7B
+  policy: qwen:7B

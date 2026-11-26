@@ -1,0 +1,31 @@
+{
+  "game": "tasty_travel",
+  "version": "20260930T124249-21906c4a",
+  "status": "candidate",
+  "sha256": "4cd54b2ce0a89d221273d7854c7d54fe1b0ac02a80e40f356d77a3714ef3d6d5",
+  "perception_validation": {
+    "status": "provisional",
+    "sha256": "4cd54b2ce0a89d221273d7854c7d54fe1b0ac02a80e40f356d77a3714ef3d6d5",
+    "board_examples": 1,
+    "failure_kind": "label_mismatch_advisory",
+    "errors": []
+  },
+  "generator_model": "anthropic/claude-opus-5",
+  "generator_base_url": "https://openrouter.ai/api/v1",
+  "max_output_tokens": 32000,
+  "reasoning_effort": "low",
+  "assumptions": [
+    "Board is always 7 columns x 9 rows with square cells",
+    "Board background is the largest pink checkered connected region",
+    "Items are pixels inside a cell that are neither pink checker nor pale blue tile",
+    "Locked tiles show dark-red level digits on pale pink circles",
+    "Item identity is approximated by dominant color plus hue/brightness histogram similarity"
+  ],
+  "limitations": [
+    "No specific item-type recognition (names are colors), so some same-color different items may look similar",
+    "Digit recognition is heuristic; unreadable locked tiles may be labeled blocker",
+    "Generators are not identified, so no double-tap generation is attempted",
+    "Dimmed/overlaid tutorial frames yield no observation",
+    "No energy/cooldown tracking"
+  ]
+}
